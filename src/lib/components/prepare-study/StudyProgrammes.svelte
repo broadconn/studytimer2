@@ -321,11 +321,11 @@
 	}
 </script>
 
-<div class="flex h-screen flex-col pl-2">
+<div class="flex h-screen flex-col py-2 pl-2">
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 	<div
 		data-tauri-drag-region
-		class="mt-2 flex-grow items-center justify-center overflow-y-auto text-white"
+		class="flex-grow items-center justify-center overflow-y-auto text-white"
 		on:mouseup={function (event) {
 			event.stopPropagation();
 			onMouseUp();
@@ -518,7 +518,7 @@
 
 	<!-- New category inputs toggler -->
 	<button
-		class="w-full gap-2 rounded-t-lg border border-white border-opacity-20 bg-white bg-opacity-10 text-white transition-all duration-300 hover:bg-white hover:bg-opacity-50 focus:outline-none focus:ring-0"
+		class="w-full rounded-lg border border-white border-opacity-20 bg-white bg-opacity-10 text-white transition-all duration-300 hover:bg-white hover:bg-opacity-50 focus:outline-none focus:ring-0"
 		on:click={toggleCategoryInputsCollpased}
 	>
 		<div class="flex-grow items-center justify-center align-middle">

@@ -45,7 +45,7 @@ Replace the app-icon.png in the root directory with your new icon, then run
 `npm run tauri icon`
 
 # Todo
-- Reduce frequency that the visualizer updates if the timer is for longer time periods
+- Reduce frequency that the visualizer updates if the timer is running for a longer time period
 - Improve the visual association between adding a study item and the timer.
   - This is mainly a problem when the studylist is visible - I think largely due to the resulting distance between the timer and the study item you click on.
   - Potential solutions: 
