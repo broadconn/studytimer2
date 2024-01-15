@@ -378,7 +378,9 @@
 								>
 									<!-- programme title bar -->
 									<div
-										class="programme-title flex flex-row items-center justify-center gap-2 rounded-t-md bg-white bg-opacity-10 py-0"
+										class="programme-title flex flex-row items-center justify-center gap-2 rounded{!programme.isCollapsed
+											? '-t'
+											: ''}-md bg-white bg-opacity-10 py-0"
 										on:mouseenter={(event) => dragEnterProgramme(event, category, index)}
 										role="list"
 									>
