@@ -53,3 +53,4 @@ Replace the app-icon.png in the root directory with your new icon, then run
     - Remove the global timer when the list is visible and add smaller timers to each list item that are visible on hover.
       - This has the added benefit of being able to save a custom time per study item. There are a few study items that I always set to a smaller time, e.g. for warm-up exercises. It would be nice to not have to manually adjust the timer for those each time, as the current experience requires.
       - Consider changing the delete-study-item interaction if this solution is chosen. The studyitem UI will get crowded.
+- Experiment with making the UI changes centered around the Play button area, considering that's where the buttons are that trigger the changes. It feels jarring to have them move so far from the mouse.
