@@ -29,6 +29,12 @@ npm run tauri build
 ```
 
 
+## Save file
+The save file can be found in `%APPDATA%/{bundle identifier from tauri.conf.json}/.settings.dat`. 
+
+It uses `Store` from `tauri-plugin-store-api` to save and load.
+
+This is where saved study items are stored.
 
 # Code Guide
 ## /src-tauri/src/main.rs
