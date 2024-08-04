@@ -9,8 +9,11 @@ It additionally provides a space to let you save and organize your intended futu
 
 ![pic](https://i.imgur.com/eKIUUR9.png)
 
-## Developing
-This is a Svelte app rendered within Tauri. Styled with Tailwind.
+## Development
+This is a Svelte app rendered within Tauri, styled with Tailwind.
+
+### Prerequisites
+[Tauri](https://tauri.app/v1/guides/getting-started/prerequisites/)
 
 Install dependencies with `yarn install` (or `npm install` or `pnpm install`).
 
