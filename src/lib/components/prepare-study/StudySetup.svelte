@@ -162,21 +162,21 @@
 	}
 
 	function handleEnqueueStudyItemsEvent(e: CustomEvent<StudyItem[]>) {
-		var studyItems = e.detail;
+		let studyItems = e.detail;
 		for (let studyItem of studyItems) {
 			addStudyItem(studyItem.name, timerTimeSpan);
 		}
 	}
 
-	function onQueuedItemDragStart(e: DragEvent) {
+	function onQueuedItemDragStart(_: DragEvent) {
 		console.log('drag start');
 	}
 
-	function onQueuedItemDragOver(e: DragEvent) {
+	function onQueuedItemDragOver(_: DragEvent) {
 		console.log('drag over');
 	}
 
-	function onQueuedItemDragEnd(e: DragEvent) {
+	function onQueuedItemDragEnd(_: DragEvent) {
 		console.log('drag end');
 	}
 </script>
@@ -200,7 +200,7 @@
 					class="relative mt-1 flex-grow overflow-y-auto rounded-l-3xl border-2 border-dashed border-gray-500 bg-slate-200 bg-opacity-5 p-1"
 				>
 					<ul class="flex flex-col gap-1">
-						{#each studyItems as studyItem, i}
+						{#each studyItems as studyItem}
 							<!-- Each individual study item -->
 							<li
 								class="queued-study-item flex items-center gap-2 rounded-l-2xl border border-solid border-white border-opacity-20 bg-black bg-opacity-25 py-2 pl-1 pr-4"
@@ -233,7 +233,7 @@
 			<!-- Multi-study settings -->
 			{#if studyItems.length > 1}
 				<div class="flex h-12 w-full flex-row" transition:slide={{ duration: 200 }}>
-					<!-- Breaks timebar -->
+					<!-- Breaks time bar -->
 					<div data-tauri-drag-region class="flex flex-grow justify-start">
 						<div data-tauri-drag-region class="flex items-center">
 							<div class="ml-2 flex flex-grow items-center">
@@ -332,13 +332,13 @@
 								class="rounded-full border border-opacity-80 p-2 text-white transition-all duration-300 hover:bg-white hover:bg-opacity-50 focus:outline-none focus:ring-0"
 								on:click={onClickProgrammesBtn}
 							>
-								<div class="flex items-center justify-center">
+								<span class="flex items-center justify-center">
 									{#if showingProgrammes}
 										<Book />
 									{:else}
 										<BookOutline />
 									{/if}
-								</div>
+								</span>
 							</button>
 						</div>
 						<div class="aspect-square">
@@ -346,9 +346,9 @@
 								class="group relative h-full w-full overflow-hidden rounded-full border border-opacity-80 text-white transition-all duration-300 hover:bg-white hover:bg-opacity-50 focus:outline-none focus:ring-0"
 								on:click={() => onClickStartStudy()}
 							>
-								<div class="flex items-center justify-center">
+								<span class="flex items-center justify-center">
 									<PlayOutline />
-								</div>
+								</span>
 							</button>
 						</div>
 					</div>
@@ -366,7 +366,7 @@
 						data-tauri-drag-region
 						class="flex-grow items-end justify-end text-end text-xs text-white text-opacity-50"
 					>
-						{studyItems.length == 0
+						{studyItems.length === 0
 							? timerTimeSpan.toNiceTimerString()
 							: totalStudyTime.toNiceTimerString()}
 					</div>
