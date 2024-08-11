@@ -140,8 +140,6 @@
 		}
 
 		// insert breaks between each item
-		console.log('splicing breaks');
-		console.log(studyItemsWithReps);
 		let i = 0;
 		while (i < studyItemsWithReps.length - 1) {
 			studyItemsWithReps.splice(i + 1, 0, new StudyItem('Break', breakTimerTimeSpan));
@@ -149,14 +147,12 @@
 		}
 		console.log(studyItemsWithReps);
 
-		console.log('starting');
 		emitEvent('startStudyEvent', studyItemsWithReps);
 	}
 
 	function onClickProgrammesBtn(
 		_event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }
 	) {
-		console.log('Sending tauri_window_state_change event~');
 		showingProgrammes = !showingProgrammes;
 		emitEvent('programmesBtnClickedEvent', showingProgrammes);
 	}
@@ -181,20 +177,20 @@
 	}
 </script>
 
-<div class="flex flex-row">
+<div class="grid {showingProgrammes ? 'grid-cols-2' : 'grid-cols-1'}">
 	{#if showingProgrammes}
-		<div class="w-full flex-grow">
+		<div class="flex-grow">
 			<StudyProgrammes on:enqueueStudyItemsEvent={handleEnqueueStudyItemsEvent} />
 		</div>
 	{/if}
 
 	<div
 		data-tauri-drag-region
-		class="mx-auto flex h-screen w-full max-w-sm flex-grow flex-col gap-2 p-2 transition-transform duration-1000"
+		class="flex h-screen w-full flex-shrink flex-col gap-2 p-2 transition-transform duration-1000"
 	>
 		<!-- List of added study items -->
 		{#if showStudyListQueue || showingProgrammes}
-			<div class="flex flex-grow flex-col overflow-y-auto">
+			<div class="flex w-full flex-grow flex-col overflow-y-auto">
 				<div
 					data-tauri-drag-region
 					class="relative mt-1 flex-grow overflow-y-auto rounded-l-3xl border-2 border-dashed border-gray-500 bg-slate-200 bg-opacity-5 p-1"
@@ -203,9 +199,9 @@
 						{#each studyItems as studyItem}
 							<!-- Each individual study item -->
 							<li
-								class="queued-study-item flex items-center gap-2 rounded-l-2xl border border-solid border-white border-opacity-20 bg-black bg-opacity-25 py-2 pl-1 pr-4"
+								class="queued-study-item flex items-center gap-2 border border-solid border-white border-opacity-20 bg-black bg-opacity-25 py-2 pl-1 pr-4"
 								draggable="true"
-								on:dragstart={(e) => onQueuedItemDragStart(e)}
+								on:dragstart={(e) => onQueuedItemDragStart(e)} 
 								on:dragover={(e) => onQueuedItemDragOver(e)}
 								on:dragend={(e) => onQueuedItemDragEnd(e)}
 							>
@@ -280,7 +276,7 @@
 				data-tauri-drag-region
 				class="flex flex-col items-center justify-center gap-2 rounded-xl bg-white bg-opacity-5 p-2 shadow-xl shadow-slate-900"
 			>
-				<!-- Top half - study item name input -->
+				<!-- Study item name input -->
 				{#if !showingProgrammes}
 					<div class="flex w-full flex-grow items-center justify-end gap-2">
 						<input
@@ -297,7 +293,7 @@
 						</button>
 					</div>
 				{/if}
-				<!-- Bottom half -->
+
 				<div class="flex h-full w-full">
 					<!-- Timer input -->
 					<div data-tauri-drag-region class="flex items-center">
@@ -323,8 +319,10 @@
 							</div>
 						</div>
 					</div>
+
 					<!-- Empty space -->
 					<div data-tauri-drag-region class="w-5 flex-1"></div>
+
 					<!-- Buttons -->
 					<div data-tauri-drag-region class="flex justify-end gap-2">
 						<div class="flex aspect-square items-center justify-center">

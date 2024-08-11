@@ -3,6 +3,26 @@ const MILLIS_PER_MINUTE = MILLIS_PER_SECOND * 60;   //     60,000
 const MILLIS_PER_HOUR = MILLIS_PER_MINUTE * 60;     //  3,600,000
 const MILLIS_PER_DAY = MILLIS_PER_HOUR * 24;        // 86,400,000
 
+export class TimeSpanSimple {
+  public hours: number;
+  public minutes: number;
+  public seconds: number;
+
+  constructor(hours: number, minutes: number, seconds: number) {
+    this.hours = hours;
+    this.minutes = minutes;
+    this.seconds = seconds;
+  }
+
+  public static fromTimeSpan(ts: TimeSpan): TimeSpanSimple {
+    return new TimeSpanSimple(ts.hours, ts.minutes, ts.seconds);
+  }
+
+  public static fromTime(hours: number, minutes: number, seconds: number): TimeSpanSimple {
+    return new TimeSpanSimple(hours, minutes, seconds);
+  }
+}
+
 export class TimeSpan {
   private _millis: number;
 

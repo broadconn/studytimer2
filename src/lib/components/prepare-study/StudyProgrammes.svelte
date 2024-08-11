@@ -1,7 +1,14 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte';
 	import { Store } from 'tauri-plugin-store-api';
-	import { Close, ArrowDown, ArrowForward, Add, ReorderTwo, DiceOutline } from 'svelte-ionicons';
+	import {
+		ArrowDown,
+		ArrowForward,
+		Add,
+		ReorderTwo,
+		DiceOutline,
+		HourglassOutline
+	} from 'svelte-ionicons';
 	import { flip } from 'svelte/animate';
 	import { slide } from 'svelte/transition';
 
@@ -42,12 +49,12 @@
 		id: string = '';
 		isCollapsed: boolean = false;
 		studyItems: Array<StudyItem> = new Array<StudyItem>();
-		categoryname: string = '';
+		categoryName: string = '';
 
-		constructor(name: string, categoryname: string, id: string) {
+		constructor(name: string, categoryName: string, id: string) {
 			this.name = name;
 			this.id = id;
-			this.categoryname = categoryname;
+			this.categoryName = categoryName;
 		}
 	}
 
@@ -113,14 +120,14 @@
 			p.isCollapsed = c.programmes.length > 1;
 		});
 
-		refreshListUI();
 		save();
+		refreshListUI();
 	}
 
 	function onClickCollapseProgrammeBtn(p: Programme) {
 		p.isCollapsed = !p.isCollapsed;
-		refreshListUI();
 		save();
+		refreshListUI();
 	}
 
 	function onClickEnqueueStudyItemBtn(studyItem: StudyItem) {
@@ -192,28 +199,31 @@
 		});
 
 		save();
-
 		studyItemsInputStr = '';
 		refreshListUI();
 	}
 
-	function onClickRemoveStudyItemBtn(studyItem: StudyItem) {
+	function removeStudyItem(studyItem: StudyItem) {
 		let category = studyData.categories.find((c) => c.name === studyItem.categoryName);
 		if (!category) return;
 		let programme = category.programmes.find((p) => p.name === studyItem.programmeName);
 		if (!programme) return;
+
+		// remove the study item
 		programme.studyItems = programme.studyItems.filter((si) => si.name !== studyItem.name);
 
+		// remove the programme if it has no more study items
 		if (programme.studyItems.length === 0) {
 			category.programmes = category.programmes.filter((p) => p.name !== studyItem.programmeName);
 		}
 
+		// remove the category if it has no more programmes
 		if (category.programmes.length === 0) {
 			studyData.categories = studyData.categories.filter((c) => c.name !== studyItem.categoryName);
 		}
 
-		refreshListUI();
 		save();
+		refreshListUI();
 	}
 
 	function onGrabStudyItemHandle(event: MouseEvent, studyItem: StudyItem): any {
@@ -238,7 +248,7 @@
 		categoryBeingDraggedCurIdx = studyData.categories.findIndex((c) => c === categoryBeingDragged);
 	}
 
-	function dragEnterStudyItem(event: MouseEvent, programme: Programme, enteredIndex: number) {
+	function mouseEnterStudyItem(event: MouseEvent, programme: Programme, enteredIndex: number) {
 		event.stopPropagation();
 		if (!elementBeingDragged || studyItemBeingDragged?.programmeName != programme.name) return;
 
@@ -250,9 +260,13 @@
 		}
 	}
 
-	function dragEnterProgramme(event: MouseEvent, categoryToStayIn: Category, enteredIndex: number) {
+	function mouseEnterProgramme(
+		event: MouseEvent,
+		categoryToStayIn: Category,
+		enteredIndex: number
+	) {
 		event.stopPropagation();
-		if (!elementBeingDragged || programmeBeingDragged?.categoryname != categoryToStayIn.name)
+		if (!elementBeingDragged || programmeBeingDragged?.categoryName != categoryToStayIn.name)
 			return;
 
 		let elementEntered: HTMLElement | null = event.currentTarget as HTMLElement;
@@ -272,7 +286,7 @@
 		}
 	}
 
-	function dragEnterCategory(event: MouseEvent, enteredIndex: number) {
+	function mouseEnterCategory(event: MouseEvent, enteredIndex: number) {
 		if (!categoryBeingDragged) return;
 
 		event.stopPropagation();
@@ -340,7 +354,7 @@
 					<!-- category titlebar -->
 					<div
 						class="category-title mr-1 flex flex-row items-center justify-center"
-						on:mouseenter={(event) => dragEnterCategory(event, index)}
+						on:mouseenter={(event) => mouseEnterCategory(event, index)}
 						role="list"
 					>
 						<button
@@ -349,6 +363,7 @@
 								onClickCollapseCategoryBtn(category);
 							}}
 						>
+							<!-- Category drag handle -->
 							<div
 								class="ml-2 cursor-grab text-white opacity-50 transition-opacity duration-200"
 								on:mousedown={(event) => onGrabCategoryHandle(event, category)}
@@ -357,8 +372,12 @@
 							>
 								<ReorderTwo />
 							</div>
+
+							<!-- Category title -->
 							<div class="flex-grow px-2 py-0.5 text-lg">{category.name}</div>
 						</button>
+
+						<!-- Add to category button -->
 						<button
 							class="category-btn float-right rounded-full border border-opacity-80 text-white transition-all duration-300 hover:bg-white hover:bg-opacity-50 focus:outline-none focus:ring-0"
 							on:click={() => {
@@ -368,6 +387,7 @@
 							<Add />
 						</button>
 					</div>
+
 					<!-- category content -->
 					{#if !category.isCollapsed}
 						<div transition:slide={{ duration: 200 }} class="flex flex-col gap-1">
@@ -378,10 +398,10 @@
 								>
 									<!-- programme title bar -->
 									<div
-										class="programme-title flex flex-row items-center justify-center gap-2 rounded{!programme.isCollapsed
-											? '-t'
-											: ''}-md bg-white bg-opacity-10 py-0"
-										on:mouseenter={(event) => dragEnterProgramme(event, category, index)}
+										class="programme-title flex flex-row items-center justify-center gap-2 {programme.isCollapsed
+											? 'rounded-md'
+											: 'rounded-t-md'} bg-white bg-opacity-10 py-0"
+										on:mouseenter={(event) => mouseEnterProgramme(event, category, index)}
 										role="list"
 									>
 										<button
@@ -402,6 +422,7 @@
 												{programme.name}
 											</div>
 										</button>
+
 										<button
 											class="programme-btn float-right rounded-full border border-opacity-80 text-white transition-all duration-300 hover:bg-white hover:bg-opacity-50 focus:outline-none focus:ring-0"
 											on:click={() => {
@@ -410,6 +431,7 @@
 										>
 											<DiceOutline />
 										</button>
+
 										<button
 											class="programme-btn float-right rounded-full border border-opacity-80 text-white transition-all duration-300 hover:bg-white hover:bg-opacity-50 focus:outline-none focus:ring-0"
 											on:click={() => {
@@ -418,6 +440,7 @@
 										>
 											<Add />
 										</button>
+
 										<button
 											class="programme-btn float-right rounded-full border border-opacity-80 text-white transition-all duration-300 hover:bg-white hover:bg-opacity-50 focus:outline-none focus:ring-0"
 											on:click={() => {
@@ -434,15 +457,16 @@
 												<!-- svelte-ignore a11y-no-static-element-interactions -->
 												<div
 													class="study-item flex flex-row"
-													on:mouseenter={(event) => dragEnterStudyItem(event, programme, index)}
+													on:mouseenter={(event) => mouseEnterStudyItem(event, programme, index)}
 													animate:flip={{ duration: 200 }}
 												>
 													<button
-														class="study-item-content flex w-full flex-row rounded-full border border-white border-opacity-0 bg-white bg-opacity-0 text-base transition-all duration-300 hover:border-opacity-20 focus:outline-none focus:ring-0"
+														class="study-item-content flex w-full flex-row rounded-full border border-white border-opacity-0 bg-white bg-opacity-0 pr-1 transition-all duration-300 hover:border-opacity-20 focus:outline-none focus:ring-0"
 														on:dblclick={() => {
 															onClickEnqueueStudyItemBtn(studyItem);
 														}}
 													>
+														<!-- Study item drag handle -->
 														<div
 															class="study-item-reorder-handle ml-2 cursor-grab text-white text-opacity-50"
 															on:mousedown={(event) => onGrabStudyItemHandle(event, studyItem)}
@@ -451,15 +475,35 @@
 														>
 															<ReorderTwo />
 														</div>
-														<button class="flex-grow text-left text-white">
-															<div class="items-center pl-2 pt-0.5">{studyItem.name}</div>
-														</button>
-														<button
-															class=" float-right rounded-full border text-white opacity-0 transition-all duration-300 hover:opacity-50"
-															on:click={() => onClickRemoveStudyItemBtn(studyItem)}
+
+														<!-- Study item name text -->
+														<div
+															class="line-clamp-1 w-full flex-grow truncate pl-2 pt-0.5 text-left text-white"
 														>
-															<Close />
-														</button>
+															<div class="study-item-name truncate">{studyItem.name}</div>
+														</div>
+
+														<!-- Study item timer input -->
+														<div data-tauri-drag-region class="flex items-center">
+															<div class="ml-1 text-white opacity-25"><HourglassOutline /></div>
+															<div class="ml-1 flex text-center">
+																<div
+																	class="rounded-l-full bg-white bg-opacity-10 p-1.5 text-xs text-white"
+																>
+																	<p>00</p>
+																</div>
+																<div
+																	class="rounded-md bg-white bg-opacity-10 p-1.5 text-xs text-white"
+																>
+																	<p>30</p>
+																</div>
+																<div
+																	class="rounded-r-full bg-white bg-opacity-10 p-1.5 text-xs text-white"
+																>
+																	<p>00</p>
+																</div>
+															</div>
+														</div>
 													</button>
 												</div>
 											{/each}
